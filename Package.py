@@ -1,46 +1,38 @@
-class Package:
-    def __init__(self, package_id, address, city, state, zip_code, deadline, weight, status="At Hub"):
-        """
-        Initialize a Package object.
+import datetime
 
-        :param package_id: int - Package ID
-        :param address: str - Delivery address
-        :param city: str - City of delivery
-        :param state: str - State of delivery
-        :param zip_code: str - ZIP code of delivery
-        :param deadline: str - Delivery deadline
-        :param weight: int - Weight of the package in kilos
-        :param status: str - Current status of the package (default: "At Hub")
-        """
-        self.package_id = package_id
+# Create class for packages
+class Package:
+    def __init__(self, ID, address, city, state, zipcode, Deadline_time, weight, status):
+        self.ID = ID
         self.address = address
         self.city = city
         self.state = state
-        self.zip_code = zip_code
-        self.deadline = deadline
+        self.zipcode = zipcode
+        self.Deadline_time = Deadline_time
         self.weight = weight
         self.status = status
         self.departure_time = None
         self.delivery_time = None
 
     def __str__(self):
-        """
-        String representation of a Package object.
-        """
-        return (f"Package ID: {self.package_id}, Address: {self.address}, City: {self.city}, "
-                f"State: {self.state}, Zip: {self.zip_code}, Deadline: {self.deadline}, "
-                f"Weight: {self.weight} Kilos, Status: {self.status}, "
-                f"Departure Time: {self.departure_time}, Delivery Time: {self.delivery_time}")
-
-    def update_status(self, current_time):
-        """
-        Update the status of the package based on the current time (a timedelta).
-        """
-        # If the truck hasn't departed with this package yet
-        if not self.departure_time or current_time < self.departure_time:
-            self.status = "At Hub"
-        # If the package was delivered before or exactly at current_time
-        elif self.delivery_time and current_time >= self.delivery_time:
-            self.status = f"Delivered at {self.delivery_time}"
+        return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.ID, self.address, self.city, self.state, self.zipcode,
+                                                       self.Deadline_time, self.weight, self.delivery_time,
+                                                       self.status)
+    # O(1)
+    def update_status(self, convert_timedelta):
+        # handling for package #9 that updates after 10:20
+        if self.ID == 9:
+            # if before 10:20, display old address
+            if convert_timedelta < datetime.timedelta(hours=10, minutes=20):
+                self.address = "300 State St"
+                self.zipcode = "84103"
+            # if after, display correct address
+            else:
+                self.address = "410 S State St"
+                self.zipcode = "84111"
+        if self.delivery_time <= convert_timedelta:
+            self.status = "Delivered"
+        elif self.departure_time <= convert_timedelta:
+            self.status = "En route"
         else:
-            self.status = "En Route"
+            self.status = "At Hub"
