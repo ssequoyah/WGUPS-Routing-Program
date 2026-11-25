@@ -1,6 +1,6 @@
 # Create class for freight trucks
 class Truck:
-    def __init__(self, capacity: object, speed: object, load: object, packages: object, mileage: object, address: object, departure: object) -> None:
+    def __init__(self, capacity: object, speed: object, load: object, packages: object, mileage: float, address: object, departure: object) -> None:
         self.capacity = capacity
         self.speed = speed
         self.load = load
